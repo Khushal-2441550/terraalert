@@ -1,3 +1,63 @@
+// locations is now loaded from india-data.js
+
+// Populate weather selects (Positive numbers only)
+function populateRangeSelect(id, min, max, step = 1) {
+    const select = document.getElementById(id);
+    if (!select) return;
+    for (let i = min; i <= max; i += step) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.innerText = i;
+        select.appendChild(opt);
+    }
+}
+
+function initDropdowns() {
+    const stateSel = document.getElementById("state");
+    const citySel = document.getElementById("city");
+    const pinSel = document.getElementById("pincode");
+
+    if (!stateSel) return;
+
+    // Load States
+    Object.keys(locations).forEach(state => {
+        const opt = document.createElement("option");
+        opt.value = state;
+        opt.innerText = state;
+        stateSel.appendChild(opt);
+    });
+
+    // State Change
+    stateSel.onchange = () => {
+        citySel.innerHTML = '<option value="">Select City</option>';
+        pinSel.innerHTML = '<option value="">Select Pincode</option>';
+        const selectedState = stateSel.value;
+        if (selectedState) {
+            Object.keys(locations[selectedState]).forEach(city => {
+                const opt = document.createElement("option");
+                opt.value = city;
+                opt.innerText = city;
+                citySel.appendChild(opt);
+            });
+        }
+    };
+
+    // City Change
+    citySel.onchange = () => {
+        const selectedState = stateSel.value;
+        const selectedCity = citySel.value;
+        // Pincode is now a text input, so no dropdown to populate
+    };
+
+    // Populate Weather (Professional Ranges)
+    populateRangeSelect("temperature", 0, 60);
+    populateRangeSelect("rainfall", 0, 500, 10);
+    populateRangeSelect("windSpeed", 0, 200, 5);
+    populateRangeSelect("humidity", 0, 100, 5);
+}
+
+initDropdowns();
+
 // Submit Report
 const form = document.getElementById("reportForm");
 
@@ -7,6 +67,7 @@ if (form) {
 
         const reportId = document.getElementById("reportId").value;
         const data = {
+            state: document.getElementById("state").value,
             city: document.getElementById("city").value,
             pincode: document.getElementById("pincode").value,
             temperature: Number(document.getElementById("temperature").value),
@@ -38,6 +99,9 @@ if (form) {
         document.getElementById("reportId").value = "";
         document.getElementById("submitBtn").innerText = "Submit Report";
 
+        // Reset City dropdown
+        document.getElementById("city").innerHTML = '<option value="">Select City</option>';
+
         loadReports(); // Refresh the list
         loadAlerts(); // Refresh alerts
     });
@@ -57,7 +121,7 @@ async function loadReports() {
         const div = document.createElement("div");
         div.className = "card";
         div.innerHTML = `
-            <h3>${report.city} (${report.pincode})</h3>
+            <h3>${report.city}, ${report.state} (${report.pincode})</h3>
             <p>Temp: ${report.temperature}°C, Rain: ${report.rainfall}mm</p>
             <p>Wind: ${report.windSpeed}km/h, Humid: ${report.humidity}%</p>
             <button class="edit-btn" style="margin-top: 10px; padding: 5px; background: #f39c12; color: #fff; border: none; border-radius: 3px; cursor: pointer;">Edit</button>
@@ -74,8 +138,21 @@ async function loadReports() {
 // Edit Report - Populates Form
 function editReport(report) {
     document.getElementById("reportId").value = report._id;
-    document.getElementById("city").value = report.city;
+
+    // Set State
+    const stateSel = document.getElementById("state");
+    stateSel.value = report.state;
+    stateSel.onchange(); // Trigger city load
+
+    // Set City
+    const citySel = document.getElementById("city");
+    citySel.value = report.city;
+    citySel.onchange(); // Trigger pin load
+
+    // Set Pincode
     document.getElementById("pincode").value = report.pincode;
+
+    // Set Weather
     document.getElementById("temperature").value = report.temperature;
     document.getElementById("rainfall").value = report.rainfall;
     document.getElementById("windSpeed").value = report.windSpeed;
@@ -160,35 +237,3 @@ window.addEventListener("scroll", () => {
         container.classList.add("visible");
     }
 });
-
-// Search functionality
-const searchBtn = document.getElementById("searchBtn");
-if (searchBtn) {
-    searchBtn.addEventListener("click", async () => {
-        const query = document.getElementById("searchInput").value;
-        if (!query) return;
-
-        try {
-            const res = await fetch(`/api/reports/search/${query}`);
-            const reports = await res.json();
-            const searchResult = document.getElementById("searchResult");
-
-            if (reports.length > 0) {
-                const report = reports[0];
-                searchResult.innerHTML = `
-                    <div class="card" style="margin: 0 auto; text-align: left; max-width: 600px;">
-                        <h3>Report for ${report.city} (${report.pincode})</h3>
-                        <p>Temperature: ${report.temperature}°C</p>
-                        <p>Rainfall: ${report.rainfall} mm</p>
-                        <p>Wind Speed: ${report.windSpeed} km/h</p>
-                        <p>Humidity: ${report.humidity}%</p>
-                    </div>
-                `;
-            } else {
-                searchResult.innerHTML = `<p style="color: white; text-align: center;">No reports found for "${query}".</p>`;
-            }
-        } catch (err) {
-            console.error("Error searching:", err);
-        }
-    });
-}

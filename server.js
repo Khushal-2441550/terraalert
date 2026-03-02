@@ -15,6 +15,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/terraalert")
 
 // Routes
 app.use("/api/users", require("./routes/users"));
+app.use("/api/auth", require("./routes/auth"));
 app.use("/api/reports", require("./routes/reports"));
 app.use("/api/alerts", require("./routes/alerts"));
 

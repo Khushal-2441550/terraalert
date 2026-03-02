@@ -6,9 +6,10 @@ const Alert = require("../models/Alert");
 // Add Report
 router.post("/", async (req, res) => {
     try {
-        const { city, pincode, temperature, rainfall, windSpeed, humidity } = req.body;
+        const { state, city, pincode, temperature, rainfall, windSpeed, humidity } = req.body;
 
         const newReport = new Report({
+            state,
             city,
             pincode,
             temperature,
@@ -72,11 +73,11 @@ router.get("/search/:query", async (req, res) => {
 router.put("/:id", async (req, res) => {
     try {
         console.log("Updating report ID:", req.params.id);
-        const { city, pincode, temperature, rainfall, windSpeed, humidity } = req.body;
+        const { state, city, pincode, temperature, rainfall, windSpeed, humidity } = req.body;
 
         const updatedReport = await Report.findByIdAndUpdate(
             req.params.id,
-            { city, pincode, temperature, rainfall, windSpeed, humidity },
+            { state, city, pincode, temperature, rainfall, windSpeed, humidity },
             { new: true }
         );
 

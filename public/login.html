@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - TerraAlert</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2>Welcome Back</h2>
+            <p style="text-align:center; color:#546e7a; margin-top:-25px; margin-bottom:30px;">Login to access the
+                monitoring portal.</p>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" placeholder="name@company.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Secure Login</button>
+            </form>
+
+            <p style="text-align: center; margin-top: 25px; font-size: 14px; color: #455a64;">
+                New to the platform? <a href="register.html"
+                    style="color: var(--accent-green); font-weight: 600; text-decoration: none;">Create an account</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = 'index.html';
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) { alert('Network connection failed'); }
+        };
+    </script>
+</body>
+
+</html>

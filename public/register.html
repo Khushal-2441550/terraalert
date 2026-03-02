@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - TerraAlert</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2>Join TerraAlert</h2>
+            <p style="text-align:center; color:#546e7a; margin-top:-25px; margin-bottom:30px;">Initialize your
+                monitoring credentials.</p>
+
+            <form id="registerForm">
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="username" placeholder="John Doe" required>
+                </div>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" placeholder="john@example.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Create Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Initialize Account</button>
+            </form>
+
+            <p style="text-align: center; margin-top: 25px; font-size: 14px; color: #455a64;">
+                Already have access? <a href="login.html"
+                    style="color: var(--accent-green); font-weight: 600; text-decoration: none;">Login here</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Registration successful! Please login.');
+                    window.location.href = 'login.html';
+                } else {
+                    alert(data.message || 'Registration failed');
+                }
+            } catch (err) { alert('Network connection failed'); }
+        };
+    </script>
+</body>
+
+</html>

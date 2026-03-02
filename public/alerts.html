@@ -4,45 +4,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alerts</title>
+    <title>Safety Alerts - TerraAlert</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
+    <header class="top-bar">
+        <div class="logo-area" onclick="window.location.href='index.html'">
+            <h2>TerraAlert</h2>
+        </div>
+        <div class="user-profile" id="userProfile" onclick="toggleUserMenu()">
+            <span id="navUsername">User</span>
+            <img src="" id="navAvatar" alt="Profile">
+        </div>
+    </header>
 
-    <!-- ============================= -->
-    <!-- Sidebar -->
-    <!-- ============================= -->
-    <div class="sidebar">
-        <h2>TerraAlert</h2>
-        <a href="index.html">Dashboard</a>
-        <a href="report.html">Manage Reports</a>
-        <a href="alerts.html">View Alerts</a>
+    <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <a href="index.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="report.html"><i class="fas fa-plus-circle"></i> Manage Reports</a>
+            <a href="alerts.html" class="active"><i class="fas fa-exclamation-triangle"></i> View Alerts</a>
+            <a href="realtime-map.html"><i class="fas fa-globe-asia"></i> Real-time Map</a>
+        </div>
+        <div class="sidebar-footer">
+            <a href="#" onclick="logout()" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
     </div>
 
-    <!-- ============================= -->
-    <!-- Page Content -->
-    <!-- ============================= -->
-    <section class="content">
+    <section class="content" id="mainContent">
         <div class="main">
-            <h1>Active Alerts</h1>
+            <h1 class="page-title">Safety Alerts Feed</h1>
+            <p class="subtitle">Live hazard status aggregated from decentralized meteorological reports.</p>
 
-            <!-- Card container for all alerts -->
             <div id="alertsList" class="card-container">
-                <!-- Example alerts (can be dynamically generated via JS) -->
-                <div class="card">
-                    <h3>Alert 1</h3>
-                    <p>Description of the alert goes here.</p>
-                </div>
-                <div class="card">
-                    <h3>Alert 2</h3>
-                    <p>Description of the alert goes here.</p>
-                </div>
+                <!-- Data populated via script.js -->
+                <p style="color: #78909c;">Initializing hazard nodes...</p>
             </div>
         </div>
     </section>
 
+    <style>
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--accent-green);
+            font-size: 40px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #546e7a;
+            margin-bottom: 40px;
+            font-size: 18px;
+        }
+    </style>
+
     <script src="script.js"></script>
+    <script>
+        if (!localStorage.getItem('token')) window.location.href = 'login.html';
+        const user = JSON.parse(localStorage.getItem('user'));
+        document.getElementById('navUsername').innerText = user.username.split(' ')[0];
+        document.getElementById('navAvatar').src = `https://ui-avatars.com/api/?name=${user.username}&background=2e7d32&color=fff`;
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const mainContent = document.getElementById('mainContent');
+        sidebarToggle.onclick = () => {
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        };
+    </script>
 </body>
 
 </html>
