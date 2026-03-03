@@ -42,52 +42,41 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('loginForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
 
-            // 🔐 TEMP ADMIN LOGIN
-            if (email === "admin@terraalert.com" && password === "admin123") {
-                localStorage.setItem('user', JSON.stringify({
-                    email: email,
-                    role: "admin",
-                    username: "Admin"
-                }));
-                window.location.href = "index.html";
-                return;
+<script>
+    const API_BASE = "https://terraalert.onrender.com"; 
+
+    document.getElementById('loginForm').onsubmit = async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        try {
+            const res = await fetch(`${API_BASE}/api/auth/login`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                window.location.href = 'index.html';
+            } else {
+                alert(data.message || "Login failed");
             }
 
-            // 👤 Check saved users in localStorage (Optional fallback)
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const foundUser = users.find(u => u.email === email && u.password === password);
-            if (foundUser) {
-                localStorage.setItem('user', JSON.stringify(foundUser));
-                window.location.href = "index.html";
-                return;
-            }
-
-            // 🌐 Backend Authentication (Primary)
-            try {
-                const res = await fetch('/api/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                const data = await res.json();
-                if (res.ok) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    window.location.href = 'index.html';
-                } else {
-                    alert(data.message || "Login failed");
-                }
-            } catch (err) {
-                alert('Network connection failed. Please ensure the server is running.');
-            }
-        };
-    </script>
+        } catch (err) {
+            console.error(err);
+            alert('Server connection failed.');
+        }
+    };
+</script>
 </body>
 
 </html>
