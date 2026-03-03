@@ -16,9 +16,14 @@
         <div class="logo-area" onclick="window.location.href='index.html'">
             <h2>TerraAlert</h2>
         </div>
-        <div class="user-profile" id="userProfile" onclick="toggleUserMenu()">
-            <span id="navUsername">User</span>
-            <img src="" id="navAvatar" alt="Profile">
+        <div class="top-bar-right">
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+            <div class="user-profile" id="userProfile" onclick="toggleUserMenu()">
+                <span id="navUsername">User</span>
+                <img src="" id="navAvatar" alt="Profile">
+            </div>
         </div>
         <div id="userMenu" class="dropdown-menu">
             <p id="userEmail" class="menu-email"></p>
@@ -151,6 +156,7 @@
             mainContent.classList.toggle('expanded');
         };
     </script>
+    <script src="theme.js"></script>
 </body>
 
 </html>

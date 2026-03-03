@@ -10,13 +10,62 @@
     --glass-bg: rgba(255, 255, 255, 0.75);
     --glass-border: rgba(255, 255, 255, 0.4);
     --sidebar-width: 280px;
+
+    /* Base Theme Variables */
+    --bg-gradient: radial-gradient(circle at top right, #f1f8e9 0%, #dcedc1 100%);
+    --bg-color: #f1f8e9;
+    --text-primary: #263238;
+    --text-secondary: #546e7a;
+    --text-muted: #78909c;
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-hover: white;
+    --input-bg: #fafafa;
+    --input-border: #eceff1;
+}
+
+body.dark-theme {
+    --primary-green: #121f18;
+    --accent-green: #4caf50;
+    --earthy-brown: #d7ccc8;
+    --hover-green: #66bb6a;
+    --glass-bg: rgba(18, 18, 18, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.1);
+
+    --bg-gradient: radial-gradient(circle at top right, #1a2620 0%, #121212 100%);
+    --bg-color: #121212;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0bec5;
+    --text-muted: #9e9e9e;
+    --card-bg: rgba(30, 30, 30, 0.85);
+    --card-hover: #2a2a2a;
+    --input-bg: #1e1e1e;
+    --input-border: #333333;
+}
+
+.theme-toggle {
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: transform 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+    color: var(--accent-green);
 }
 
 body {
     margin: 0;
     font-family: 'Outfit', sans-serif;
-    background: radial-gradient(circle at top right, #f1f8e9 0%, #dcedc1 100%);
-    color: #263238;
+    background: var(--bg-gradient);
+    background-color: var(--bg-color);
+    color: var(--text-primary);
     overflow-x: hidden;
 }
 
@@ -50,6 +99,13 @@ body {
     z-index: 100;
 }
 
+.top-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: auto;
+}
+
 .logo-area {
     position: absolute;
     left: 50%;
@@ -71,16 +127,15 @@ body {
     align-items: center;
     gap: 15px;
     cursor: pointer;
-    background: rgba(255, 255, 255, 0.6);
+    background: var(--card-bg);
     padding: 6px 16px;
     border-radius: 40px;
     border: 1px solid var(--glass-border);
     transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-left: auto;
 }
 
 .user-profile:hover {
-    background: white;
+    background: var(--card-hover);
     box-shadow: 0 8px 20px rgba(46, 125, 50, 0.1);
 }
 
@@ -167,7 +222,7 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
-    color: #455a64;
+    color: var(--text-secondary);
     text-decoration: none;
     margin: 10px 0;
     padding: 15px 20px;
@@ -219,7 +274,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
-    background: rgba(255, 255, 255, 0.85);
+    background: var(--card-bg);
     backdrop-filter: blur(15px);
     padding: 40px;
     border-radius: 32px;
@@ -235,7 +290,7 @@ body {
 .form-group label {
     font-size: 13px;
     font-weight: 600;
-    color: #78909c;
+    color: var(--text-muted);
     margin-bottom: 10px;
     text-transform: uppercase;
     letter-spacing: 0.8px;
@@ -245,10 +300,10 @@ select,
 input {
     padding: 16px 20px;
     border-radius: 14px;
-    border: 2px solid #eceff1;
-    background: #fafafa;
+    border: 2px solid var(--input-border);
+    background: var(--input-bg);
     font-size: 16px;
-    color: #37474f;
+    color: var(--text-primary);
     outline: none;
     transition: 0.3s;
 }
@@ -256,12 +311,12 @@ input {
 select:focus,
 input:focus {
     border-color: var(--accent-green);
-    background: white;
+    background: var(--card-hover);
     box-shadow: 0 0 0 6px rgba(46, 125, 50, 0.08);
 }
 
 .card {
-    background: rgba(255, 255, 255, 0.6);
+    background: var(--card-bg);
     backdrop-filter: blur(12px);
     border: 1px solid var(--glass-border);
     padding: 30px;
@@ -274,7 +329,7 @@ input:focus {
 .card:hover {
     transform: translateY(-10px);
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
-    background: white;
+    background: var(--card-hover);
 }
 
 .card h3 {
@@ -357,22 +412,23 @@ input:focus {
     margin-bottom: 10px;
     font-size: 14px;
     font-weight: 600;
-    color: #546e7a;
+    color: var(--text-secondary);
 }
 
 .input-group input {
     width: 100%;
     padding: 15px;
     border-radius: 12px;
-    border: 2px solid #eceff1;
-    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid var(--input-border);
+    background: var(--card-bg);
+    color: var(--text-primary);
     box-sizing: border-box;
     transition: 0.3s;
 }
 
 .input-group input:focus {
     border-color: var(--accent-green);
-    background: white;
+    background: var(--card-hover);
 }
 
 .card-container {
